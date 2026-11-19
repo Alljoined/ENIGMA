@@ -9,6 +9,34 @@ conda env create -f environment.yml
 conda activate enigma
 ```
 
+## Check input file layout
+
+Before starting training, check all configured input paths without loading EEG,
+images or feature tensors, or importing the model dependencies:
+
+```bash
+python check_data.py --config configs/Alljoined-1.6M.json
+# Check one subject instead of every configured subject:
+python check_data.py --config configs/Alljoined-1.6M.json --subjects sub-01
+```
+
+Relative paths are resolved from the current directory, as in the dataset loader.
+Use `--root /path/to/project` to check another root. The JSON report lists missing
+metadata, EEG and feature files together; shared feature paths are checked once.
+Exit codes are 0 for all expected files present, 1 for missing files and 2 for
+invalid configuration or arguments.
+
+This checks file availability only. It does not validate data contents, subject
+or trial alignment, feature keys, embedding provenance or decoding performance.
+It never downloads files, substitutes metadata filenames or generates embeddings.
+The dataset and pretrained models have their own access and license conditions.
+
+The checker's synthetic tests require only Python's standard library:
+
+```bash
+python -m unittest -v test_check_data
+```
+
 ## Usage
 
 ### Image Reconstruction
